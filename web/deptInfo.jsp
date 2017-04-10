@@ -1,56 +1,41 @@
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
-<%@ page import="cn.gjp0609.ems_v2.entity.Dept" %>
-<%@ page import="java.util.Date" %><%--
+<%--
   Created by IntelliJ IDEA.
   User: gjp06
   Date: 17.4.4
   Time: 16:06
   To change this template use File | Settings | File Templates.
 --%>
+<%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="com.opensymphony.xwork2.ActionContext" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
-</head>
-<body>
-<html>
-<head>
-    <title>emplist</title>
-    <link rel="stylesheet" type="text/css"
-          href="<c:url context='${pageContext.request.contextPath}' value='/css/style.css'/>"/>
+    <title>部门信息</title>
+    <link rel="stylesheet" href="<s:url value="/css/style.css" />">
 </head>
 <%
-    Date currectDate = new Date();
-
-    Dept dept = (Dept) request.getAttribute("dept");
-    pageContext.setAttribute("dept", dept);
+    //在 pageContext 中存入当前时间
+    pageContext.setAttribute("date", new Date());
+    System.out.println(ActionContext.getContext().getValueStack().peek());
 %>
 <body>
+<%--<s:debug/>--%>
 <div id="wrap">
     <div id="top_content">
         <div id="header">
-            <div id="rightheader">
-                <p>
-                    <fmt:formatDate value="<%=currectDate%>" pattern="yyyy/MM/dd"/>
-                    <br/>
-                </p>
-            </div>
+            <div id="rightheader"><p><s:date name="#attr.date" format="yyyy/MM/dd"/></p></div>
             <div id="topheader">
-                <h1 id="title">
-                    <a href="<c:url context="${pageContext.request.contextPath}" value="/empList.jsp"/>">Main</a>
-                </h1>
+                <h1 id="title"><a href="<s:url value="index.jsp"/>">Main</a></h1>
             </div>
-            <div id="navigation">
+            <div id="navigation"><a href="<s:url namespace="/admin" action="queryAllEmp_Admin"/>">&curvearrowleft;返回</a>
             </div>
         </div>
         <div id="content">
-            <p id="whereami">
-            </p>
+            <p id="whereami"></p>
             <h1>
-                dept id: ${dept.id} &nbsp;&nbsp;&nbsp;&nbsp;
-                dept name: ${dept.name}
+                部门编号：<s:property value="id"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                部门名称：<s:property value="name"/>
             </h1>
             <table class="table">
                 <tr class="table_header">
@@ -59,31 +44,18 @@
                     <td>Sex</td>
                     <td>Birthday</td>
                     <td>salary</td>
-                    <td>Operation</td>
                 </tr>
 
-
-                <c:forEach var="emp" items="${dept.emps}">
+                <s:iterator value="emps" var="emp">
                     <tr class="row1">
-                        <td>${emp.id}</td>
-                        <td>${emp.name}</td>
-                        <td>${emp.sex}</td>
-                        <td>${emp.salary}</td>
-                        <td>${emp.birthday}</td>
-                        <td>
-                                <%-- 删除及更新员工 --%>
-                            <a href="<c:url context="${pageContext.request.contextPath}"
-                                    value="/admin/deleteEmp_Admin.action?id=${emp.id}" />">delete</a>&nbsp;
-                            <a href="<c:url context="${pageContext.request.contextPath}"
-                                    value="/admin/getEmpInfo_Admin.action?id=${emp.id}" />">update</a>
-                        </td>
+                        <td><s:property value="#emp.id"/></td>
+                        <td><s:property value="#emp.name"/></td>
+                        <td><s:property value="#emp.sex"/></td>
+                        <td><s:property value="#emp.salary"/></td>
+                        <td><s:date name="#emp.birthday" format="yyyy-MM-dd"/></td>
                     </tr>
-                </c:forEach>
+                </s:iterator>
             </table>
-            <p>
-                <input type="button" class="button" value="Add Employee"
-                       onclick="location='<c:url context="${pageContext.request.contextPath}" value="/addEmp.jsp"/>'"/>
-            </p>
         </div>
     </div>
     <div id="footer">
@@ -92,7 +64,7 @@
         </div>
     </div>
 </div>
+<%--<s:debug/>--%>
 </body>
 </html>
-</body>
-</html>
+

@@ -50,7 +50,8 @@ public class Dept {
     public String toString() {
         return "Dept{" +
                 "id=" + id +
-                ", name='" + name +
-                "}";
+                ", name='" + name + '\'' +
+                ", emps=" + emps.toString() +
+                '}';
     }
 }
