@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.gjp0609.ems_v2.dao.DeptDao">
+    <resultMap type="Dept" id="DeptResultMap">
+        <id property="id" column="DEPT_ID"/>
+        <result property="name" column="name"/>
+        <collection property="emps" ofType="Employee">
+            <id property="id" column="id"/>
+            <result property="name" column="name"/>
+            <result property="sex" column="sex"/>
+            <result property="salary" column="salary"/>
+            <result property="birthday" column="birthday"/>
+        </collection>
+    </resultMap>
+
+    <sql id="SelectEnD">
+        SELECT
+            E.ID,
+            E.NAME,
+            E.SEX,
+            E.SALARY,
+            E.BIRTHDAY,
+            E.DEPT_ID,
+            D.NAME
+        FROM T_EMS_EMPLOYEE E LEFT JOIN T_EMS_DEPARTMENT D ON D.ID = E.DEPT_ID
+    </sql>
+
+    <insert id="addDept">
+        INSERT INTO T_EMS_DEPARTMENT VALUES (#{id}, #{name})
+    </insert>
+    <update id="updateDept">
+        UPDATE T_EMS_DEPARTMENT
+        SET NAME = #{name}
+        WHERE ID = #{id}
+    </update>
+    <delete id="deleteDept">
+        DELETE FROM T_EMS_DEPARTMENT
+        WHERE ID = #{deptID}
+    </delete>
+    <select id="selectDeptById" resultMap="DeptResultMap">
+        <include refid="SelectEnD"/>
+        WHERE D.ID = #{id}
+    </select>
+    <select id="selectAllDept" resultMap="DeptResultMap">
+        <include refid="SelectEnD"/>
+    </select>
+</mapper>

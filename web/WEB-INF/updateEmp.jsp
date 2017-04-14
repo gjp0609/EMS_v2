@@ -23,9 +23,9 @@
         <div id="header">
             <div id="rightheader"><p><s:date name="#attr.date" format="yyyy/MM/dd"/></p></div>
             <div id="topheader">
-                <h1 id="title"><a href="<s:url value="index.jsp"/>">Main</a></h1>
+                <h1 id="title"><a href="<s:url value="login.jsp"/>">Main</a></h1>
             </div>
-            <div id="navigation"></div>
+            <div id="navigation"><span>当前登录：<s:property value="#session.admin.name"/></span></div>
         </div>
         <div id="content">
             <p id="whereami"></p>
@@ -49,8 +49,14 @@
                     <tr>
                         <td valign="middle" align="right">sex:</td>
                         <td valign="middle" align="left">
-                            <input type="text" class="inputgri" name="employee.sex"
-                                   value="<s:property value="sex" />" title="员工性别"/>
+                            <s:if test="sex.equalsIgnoreCase(\"M\")">
+                                <input type="radio" name="employee.sex" value="F" title="男性" checked/> 男
+                                <input type="radio" name="employee.sex" value="M" title="女性"/> 女
+                            </s:if>
+                            <s:else>
+                                <input type="radio" name="employee.sex" value="F" title="男性"/> 男
+                                <input type="radio" name="employee.sex" value="M" title="女性" checked/> 女
+                            </s:else>
                         </td>
                     </tr>
                     <tr>
@@ -63,8 +69,8 @@
                     <tr>
                         <td valign="middle" align="right">birthday:</td>
                         <td valign="middle" align="left">
-                            <input type="text" class="inputgri" name="employee.birthday"
-                                   value="<s:property value="birthday" />" title="员工生日"/>
+                            <input type="date" class="inputgri" name="employee.birthday"
+                                   value="<s:date name="birthday" format="yyyy-MM-dd"/>" title="员工生日"/>
                         </td>
                     </tr>
                     <tr>

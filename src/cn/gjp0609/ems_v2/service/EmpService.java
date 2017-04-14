@@ -15,10 +15,10 @@ public interface EmpService {
 
     public Employee queryEmpById(Integer id);
 
-    public void deleteEmp(Employee employee);
+    public int deleteEmp(Integer id);
 
-    public void updateEmp(Employee employee);
+    public int updateEmp(Employee employee);
 
-    public void addEmp(Employee employee);
+    public int addEmp(Employee employee);
 
 }

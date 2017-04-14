@@ -29,9 +29,5 @@ public class BaseAction extends ActionSupport {
     public Object getApplicationValue(String key) {
         return vs.findValue("#application." + key);
     }
-
-    public void pushValue(Object value) {
-        vs.push(value);
-    }
-
+    
 }

@@ -1,9 +1,9 @@
 package cn.gjp0609.ems_v2.service.Impl;
 
-import cn.gjp0609.ems_v2.dao.impl.EmpDaoImpl;
+import cn.gjp0609.ems_v2.dao.EmpDao;
 import cn.gjp0609.ems_v2.entity.Employee;
 import cn.gjp0609.ems_v2.service.EmpService;
-import cn.gjp0609.ems_v2.utils.TransactionUtils;
+import cn.gjp0609.ems_v2.utils.MyBatisUtils;
 
 import java.util.List;
 
@@ -13,47 +13,81 @@ import java.util.List;
 public class EmpServiceImpl implements EmpService {
     @Override
     public List<Employee> queryAllEmp() {
-        return new EmpDaoImpl().selectAllEmp();
+        List<Employee> list = null;
+        try {
+            EmpDao empDao = MyBatisUtils.get(EmpDao.class);
+            list = empDao.selectAllEmp();
+            if (list == null) throw new RuntimeException("查询无任何员工");
+            MyBatisUtils.commit();
+        } catch (Exception e) {
+            MyBatisUtils.rollback();
+            e.printStackTrace();
+        }
+        return list;
     }
 
     @Override
     public Employee queryEmpById(Integer id) {
-        return new EmpDaoImpl().selectEmpById(id);
+        Employee employee = null;
+        try {
+            if (id == null) throw new RuntimeException("未收到员工 ID");
+            EmpDao empDao = MyBatisUtils.get(EmpDao.class);
+            employee = empDao.selectEmpById(id);
+            if (employee == null) throw new RuntimeException("未找到此员工");
+            MyBatisUtils.commit();
+        } catch (Exception e) {
+            MyBatisUtils.rollback();
+            e.printStackTrace();
+        }
+        return employee;
+    }
+
+
+    @Override
+    public int deleteEmp(Integer id) {
+        int result = 0;
+        try {
+            if (id == null) throw new RuntimeException("未收到要删除的员工 ID");
+            EmpDao empDao = MyBatisUtils.get(EmpDao.class);
+            result = empDao.deleteEmp(id);
+            if (result != 1) throw new RuntimeException("删除员工失败");
+            MyBatisUtils.commit();
+        } catch (Exception e) {
+            MyBatisUtils.rollback();
+            e.printStackTrace();
+        }
+        return result;
     }
 
     @Override
-    public void deleteEmp(Employee employee) {
+    public int updateEmp(Employee employee) {
+        int result = 0;
         try {
-            int result = new EmpDaoImpl().deleteEmp(employee);
-            if (result != 1) throw new RuntimeException("删除失败");
-            else TransactionUtils.commit();
+            if (employee == null) throw new RuntimeException("未收到参数");
+            EmpDao empDao = MyBatisUtils.get(EmpDao.class);
+            result = empDao.updateEmp(employee);
+            if (result != 1) throw new RuntimeException("更新员工失败");
+            MyBatisUtils.commit();
         } catch (Exception e) {
-            TransactionUtils.rollback();
+            MyBatisUtils.rollback();
             e.printStackTrace();
         }
+        return result;
     }
 
     @Override
-    public void updateEmp(Employee employee) {
+    public int addEmp(Employee employee) {
+        int result = 0;
         try {
-            int result = new EmpDaoImpl().updateEmp(employee);
-            if (result != 1) throw new RuntimeException("更新失败");
-            TransactionUtils.commit();
+            if (employee == null) throw new RuntimeException("未收到要添加的员工");
+            EmpDao empDao = MyBatisUtils.get(EmpDao.class);
+            result = empDao.addEmp(employee);
+            if (result != 1) throw new RuntimeException("添加员工失败");
+            MyBatisUtils.commit();
         } catch (Exception e) {
-            TransactionUtils.rollback();
+            MyBatisUtils.rollback();
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void addEmp(Employee employee) {
-        try {
-            int result = new EmpDaoImpl().addEmp(employee);
-            if (result != 1) throw new RuntimeException("添加失败");
-            TransactionUtils.commit();
-        } catch (Exception e) {
-            TransactionUtils.rollback();
-            e.printStackTrace();
-        }
+        return result;
     }
 }

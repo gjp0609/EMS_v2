@@ -7,6 +7,7 @@ import cn.gjp0609.ems_v2.service.EmpService;
 import cn.gjp0609.ems_v2.service.Impl.AdminServiceImpl;
 import cn.gjp0609.ems_v2.service.Impl.DeptServiceImpl;
 import cn.gjp0609.ems_v2.service.Impl.EmpServiceImpl;
+import com.opensymphony.xwork2.ActionContext;
 import org.apache.struts2.ServletActionContext;
 
 import javax.servlet.http.Cookie;
@@ -26,6 +27,10 @@ public class AdminAction extends BaseAction {
     private Employee employee;
     // 在删除用户、查询部门和员工信息时使用
     private Integer id;
+    private Integer deptId;
+    private List<Dept> depts;
+    private List<Employee> employees;
+
 
     public String login() throws Exception {
 
@@ -43,13 +48,13 @@ public class AdminAction extends BaseAction {
                 // 把成功登陆的管理员对象存入 session 作用域
                 setSessionValue("admin", admin);
                 // 新建 cookie 对象
-                Cookie ck = new Cookie("username", admin.getName());
-                // 设置 cookie 存活时间，保证登录后 7 天内记住管理员登录名
-                ck.setMaxAge(3600 * 24 * 7);
-                // 设置 cookie 路径，让 index.jsp 可以取到此 cookie
-                ck.setPath("/ems_v2");
+                Cookie ck1 = new Cookie("username", admin.getName());
+                // 设置 cookie 存活时间，保证登录后 7 天内记住管理员登录名，一天内记住密码
+                ck1.setMaxAge(3600 * 24 * 7);
+                // 设置 cookie 路径，让 login.jsp 可以取到此 cookie
+                ck1.setPath("/ems_v2");
                 // 将 cookie 添加到浏览器
-                ServletActionContext.getResponse().addCookie(ck);
+                ServletActionContext.getResponse().addCookie(ck1);
                 // 登陆成功则转发至查询用户页面（empList.jsp）
                 return SUCCESS;
             }
@@ -59,7 +64,7 @@ public class AdminAction extends BaseAction {
     }
 
     /**
-     * @return <i>login</i> 登录页面（index.jsp）<br />
+     * @return <i>login</i> 登录页面（login.jsp）<br />
      * <i>none</i> 注册页面（signUp.jsp）
      */
     public String register() throws Exception {
@@ -96,7 +101,7 @@ public class AdminAction extends BaseAction {
     public String deleteEmp() throws Exception {
         // 调用 EmpService 删除指定员工
         EmpService es = new EmpServiceImpl();
-        es.deleteEmp(es.queryEmpById(id));
+        es.deleteEmp(es.queryEmpById(id).getId());
         // 无论是否成功都转发至查询界面
         return SUCCESS;
     }
@@ -113,21 +118,25 @@ public class AdminAction extends BaseAction {
     public String queryAllEmp() throws Exception {
         // 创建部门集合，存入所有部门；每个部门中有 employee 集合，存入所有该部门员工
         // 调用 DeptServiceImpl 获得部门集合
-        List<Dept> depts = new DeptServiceImpl().queryAllDept();
-        // 将部门集合存入 Root 区中
-        pushValue(depts);
+       employees = new EmpServiceImpl().queryAllEmp();
+//        depts = new DeptServiceImpl().queryAllDept();
+//        for (Dept dept : depts) {
+//            for (Employee e : dept.getEmps()) {
+//                System.out.println(e);
+//            }
+//        }
         // 跳转到查询所有员工页面
         return SUCCESS;
     }
 
     public String getDeptInfo() throws Exception {
-        Dept dept = new DeptServiceImpl().queryDeptById(id);
+        Dept dept = new DeptServiceImpl().queryDeptById(deptId);
         if (dept == null) {
             // 部门不存在则跳转至主查询界面
             return SUCCESS;
         } else {
             // 部门存在，将查得的部门对象存入 ROOT 区
-            pushValue(dept);
+            ActionContext.getContext().getValueStack().push(dept);
             // 转发至查询部门信息界面
             return "dept";
         }
@@ -136,7 +145,7 @@ public class AdminAction extends BaseAction {
     public String getEmpInfo() throws Exception {
         employee = new EmpServiceImpl().queryEmpById(id);
         // 将对象保存到 request 作用域中
-        pushValue(employee);
+        ActionContext.getContext().getValueStack().push(employee);
         // 跳转至更新用户页面
         return "update";
     }
@@ -172,5 +181,29 @@ public class AdminAction extends BaseAction {
 
     public void setAdmin(Admin admin) {
         this.admin = admin;
+    }
+
+    public List<Dept> getDepts() {
+        return depts;
+    }
+
+    public void setDepts(List<Dept> depts) {
+        this.depts = depts;
+    }
+
+    public Integer getDeptId() {
+        return deptId;
+    }
+
+    public void setDeptId(Integer deptId) {
+        this.deptId = deptId;
+    }
+
+    public List<Employee> getEmployees() {
+        return employees;
+    }
+
+    public void setEmployees(List<Employee> employees) {
+        this.employees = employees;
     }
 }

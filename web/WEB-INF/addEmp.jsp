@@ -24,14 +24,14 @@
         <div id="header">
             <div id="rightheader"><p><s:date name="#attr.date" format="yyyy/MM/dd"/></p></div>
             <div id="topheader">
-                <h1 id="title"><a href="<s:url value="index.jsp"/>">&diamondsuit; 主页 &diamondsuit;</a></h1></div>
-            <div id="navigation"></div>
+                <h1 id="title"><a href="<s:url value="login.jsp"/>">&diamondsuit; 主页 &diamondsuit;</a></h1></div>
+            <div id="navigation"><span>当前登录：<s:property value="#session.admin.name"/></span></div>
         </div>
         <div id="content">
             <p id="whereami"></p>
             <h1>添加员工信息 </h1>
             <form action="<s:url namespace="/admin" action="addEmp_Admin"/>" method="post">
-                <table cellpadding="0" cellspacing="0" border="1" class="form_table">
+                <table cellpadding="0" cellspacing="0" border="0" class="form_table">
                     <tr>
                         <td valign="middle" align="right">姓名：</td>
                         <td valign="middle" align="left">
@@ -41,29 +41,37 @@
                     <tr>
                         <td valign="middle" align="right">性别：</td>
                         <td valign="middle" align="left">
-                            <s:radio style="display='inline'" list="%{ {'M','F'} }" name="employee.sex" value="M"/>
+                            <input type="radio" name="employee.sex" value="F" title="男性" checked/> 男
+                            <input type="radio" name="employee.sex" value="M" title="女性"/> 女
                         </td>
                     </tr>
+                    <%--<s:radio list="%{ {'M','F'} }" name="employee.sex" value="M" label="性别"/>--%>
                     <tr>
                         <td valign="middle" align="right">出生日期：</td>
                         <td valign="middle" align="left">
-                            <input type="date" class="inputgri" name="employee.birthday" title="此处输入员工生日"/>
+                            <input type="date" class="inputgri" name="employee.birthday" title="此处选择员工生日"
+                                   value="1995-07-06"/>
                         </td>
                     </tr>
                     <tr>
                         <td valign="middle" align="right">工资：</td>
                         <td valign="middle" align="left">
-                            <input type="text" class="inputgri" name="employee.salary" title="此处输入员工工资"/>
+                            <input type="text" class="inputgri" name="employee.salary"
+                                   title="此处输入员工工资" value="0.0"/>
                         </td>
                     </tr>
                     <tr>
                         <td valign="middle" align="right">部门：</td>
                         <td valign="middle" align="left">
-                            <select name="employee.dept.id" title="此处输入员工部门">
+                            <select name="employee.dept.id" title="此处选择员工部门">
                                 <s:iterator value="#session.depts" var="dept">
+
                                     <option value="<s:property value="#dept.key"/>">
+
                                         <s:property value="#dept.value"/>
+
                                     </option>
+
                                 </s:iterator>
                             </select>
                         </td>

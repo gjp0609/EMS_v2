@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.gjp0609.ems_v2.dao.EmpDao">
+
+    <resultMap id="FEmployee" type="Employee">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="sex" column="sex"/>
+        <result property="salary" column="salary"/>
+        <result property="birthday" column="birthday"/>
+        <association property="dept" javaType="Dept">
+            <id property="id" column="DEPT_ID"/>
+            <result property="name" column="DEPT_NAME"/>
+        </association>
+    </resultMap>
+
+    <sql id="SelectEnD">
+        SELECT
+            E.ID,
+            E.NAME,
+            E.SEX,
+            E.SALARY,
+            E.BIRTHDAY,
+            D.ID   AS DEPT_ID,
+            D.NAME AS DEPT_NAME
+        FROM T_EMS_EMPLOYEE E LEFT JOIN T_EMS_DEPARTMENT D ON E.DEPT_ID = D.ID
+    </sql>
+
+    <insert id="addEmp">
+        <selectKey order="BEFORE" keyProperty="id" resultType="Integer">
+            SELECT T_EMS_SEQ.nextval FROM dual
+        </selectKey>
+        INSERT INTO T_EMS_EMPLOYEE VALUES (#{id}, #{name}, #{sex}, #{salary},#{birthday}, #{dept.id})
+    </insert>
+    <update id="updateEmp">
+        UPDATE T_EMS_EMPLOYEE
+        SET NAME = #{name}, SEX = #{sex}, SALARY = #{salary}, BIRTHDAY = #{birthday}, DEPT_ID = #{dept.id}
+        WHERE ID = #{id}
+    </update>
+    <delete id="deleteEmp">
+        DELETE FROM T_EMS_EMPLOYEE
+        WHERE ID = #{id}
+    </delete>
+    <delete id="deleteEmpByDeptId">
+        DELETE FROM T_EMS_EMPLOYEE
+        WHERE DEPT_ID = #{deptIdl}
+    </delete>
+    <select id="selectEmpById" resultMap="FEmployee">
+        <include refid="SelectEnD"/>
+        WHERE E.ID = #{id}
+    </select>
+    <select id="selectEmpByDeptId" resultMap="FEmployee">
+        <include refid="SelectEnD"/>
+        WHERE E.DEPT_ID = #{deptId}
+    </select>
+    <select id="selectAllEmp" resultMap="FEmployee">
+        <include refid="SelectEnD"/>
+    </select>
+</mapper>

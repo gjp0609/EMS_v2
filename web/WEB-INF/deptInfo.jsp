@@ -17,7 +17,7 @@
 <%
     //在 pageContext 中存入当前时间
     pageContext.setAttribute("date", new Date());
-    System.out.println(ActionContext.getContext().getValueStack().peek());
+//    System.out.println(ActionContext.getContext().getValueStack().peek());
 %>
 <body>
 <%--<s:debug/>--%>
@@ -26,9 +26,11 @@
         <div id="header">
             <div id="rightheader"><p><s:date name="#attr.date" format="yyyy/MM/dd"/></p></div>
             <div id="topheader">
-                <h1 id="title"><a href="<s:url value="index.jsp"/>">Main</a></h1>
+                <h1 id="title"><a href="<s:url value="login.jsp"/>">主页</a></h1>
             </div>
-            <div id="navigation"><a href="<s:url namespace="/admin" action="queryAllEmp_Admin"/>">&curvearrowleft;返回</a>
+            <div id="navigation">
+                <a href="<s:url namespace="/admin" action="queryAllEmp_Admin"/>">&curvearrowleft;返回</a>
+                <span>当前登录：<s:property value="#session.admin.name"/></span>
             </div>
         </div>
         <div id="content">
@@ -39,11 +41,11 @@
             </h1>
             <table class="table">
                 <tr class="table_header">
-                    <td>ID</td>
-                    <td>Name</td>
-                    <td>Sex</td>
-                    <td>Birthday</td>
-                    <td>salary</td>
+                    <td>员工 ID</td>
+                    <td>员工姓名</td>
+                    <td>性别</td>
+                    <td>出生日期</td>
+                    <td>薪资</td>
                 </tr>
 
                 <s:iterator value="emps" var="emp">

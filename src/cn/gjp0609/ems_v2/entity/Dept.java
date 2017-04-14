@@ -1,5 +1,6 @@
 package cn.gjp0609.ems_v2.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,15 +12,14 @@ public class Dept {
 
     private Integer id;
     private String name;
-    private List<Employee> emps;
+    private List<Employee> emps = new ArrayList<>();
 
     public Dept() {
     }
 
-    public Dept(Integer id, String name, List<Employee> emps) {
+    public Dept(Integer id, String name) {
         this.id = id;
         this.name = name;
-        this.emps = emps;
     }
 
     public Integer getId() {

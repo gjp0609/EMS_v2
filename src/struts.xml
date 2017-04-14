@@ -6,17 +6,61 @@
 
 <struts>
 
+    <!-- 配置通用 action 包 -->
+    <package name="commons" extends="struts-default" namespace="/commons">
+        <interceptors>
+            <!-- 设置拦截 cookie -->
+            <interceptor-stack name="myStack">
+                <interceptor-ref name="defaultStack"/>
+                <interceptor-ref name="cookie">
+                    <param name="cookiesName">username,password</param>
+                </interceptor-ref>
+            </interceptor-stack>
+        </interceptors>
+        <!-- 通用 action, 默认跳转至对应 jsp 页面 -->
+        <action name="*">
+            <result name="success">/WEB-INF/{1}.jsp</result>
+        </action>
+        <!-- 主页跳转 action, 用于获得 cookie, 跳转至 login.jsp -->
+        <action name="welcome" class="cn.gjp0609.ems_v2.action.CommonAction">
+            <interceptor-ref name="myStack"/>
+            <result name="success" type="chain">login</result>
+        </action>
+    </package>
+
+    <package name="emp" extends="struts-default" namespace="/emp">
+
+    </package>
+
     <package name="admin" extends="struts-default" namespace="/admin">
+        <interceptors>
+            <interceptor name="adminLogin" class="cn.gjp0609.ems_v2.interceptor.AdminLoginInterceptor">
+                <param name="excludeMethods">login,register,getVCode</param>
+            </interceptor>
+            <interceptor-stack name="loginStack">
+                <interceptor-ref name="defaultStack"/>
+                <interceptor-ref name="adminLogin"/>
+            </interceptor-stack>
+
+        </interceptors>
+
+        <default-interceptor-ref name="loginStack"/>
 
         <global-results>
+            <result name="login" type="chain">
+                <param name="namespace">/commons</param>
+                <param name="actionName">login</param>
+            </result>
             <result name="success" type="redirectAction">queryAllEmp_Admin</result>
-            <result name="login" type="redirect">/index.jsp</result>
         </global-results>
 
         <action name="login_Admin" class="cn.gjp0609.ems_v2.action.AdminAction" method="login"/>
 
         <action name="register_Admin" class="cn.gjp0609.ems_v2.action.AdminAction" method="register">
-            <result name="none">/signUp.jsp</result>
+            <result name="none" type="chain">
+                <param name="namespace">/commons</param>
+                <param name="actionName">signUp</param>
+            </result>
         </action>
 
         <action name="addEmp_Admin" class="cn.gjp0609.ems_v2.action.AdminAction" method="addEmp"/>
@@ -26,61 +70,27 @@
         <action name="update_Admin" class="cn.gjp0609.ems_v2.action.AdminAction" method="updateEmp"/>
 
         <action name="queryAllEmp_Admin" class="cn.gjp0609.ems_v2.action.AdminAction" method="queryAllEmp">
-            <result name="success">/empList.jsp</result>
+            <result name="success" type="chain">
+                <param name="namespace">/commons</param>
+                <param name="actionName">empList</param>
+            </result>
         </action>
 
         <action name="getDeptInfo_Admin" class="cn.gjp0609.ems_v2.action.AdminAction" method="getDeptInfo">
-            <result name="dept">/deptInfo.jsp</result>
+            <result name="dept" type="chain">
+                <param name="namespace">/commons</param>
+                <param name="actionName">deptInfo</param>
+            </result>
         </action>
 
         <action name="getEmpInfo_Admin" class="cn.gjp0609.ems_v2.action.AdminAction" method="getEmpInfo">
-            <result name="update">/updateEmp.jsp</result>
+            <result name="update" type="chain">
+                <param name="namespace">/commons</param>
+                <param name="actionName">updateEmp</param>
+            </result>
         </action>
 
         <action name="getVCode" class="cn.gjp0609.ems_v2.action.UtilsAction" method="getVCode"/>
     </package>
-
-
-    <!--<package name="login" namespace="/login" extends="struts-default">-->
-
-    <!--<global-results>-->
-    <!--<result name="success" type="redirectAction">-->
-    <!--<param name="namespace">/login</param>-->
-    <!--<param name="actionName">queryAllEmp</param>-->
-    <!--</result>-->
-    <!--</global-results>-->
-
-    <!--<action name="addEmployee" class="cn.gjp0609.ems_v2.action.AddEmployeeAction">-->
-    <!--</action>-->
-
-    <!--<action name="deleteEmp" class="cn.gjp0609.ems_v2.action.DeleteEmpAction">-->
-    <!--</action>-->
-
-    <!--<action name="updateEmp" class="cn.gjp0609.ems_v2.action.UpdateEmpAction">-->
-    <!--</action>-->
-
-    <!--<action name="deptInfo" class="cn.gjp0609.ems_v2.action.DeptInfoAction">-->
-    <!--<result name="deptInfo">/deptInfo.jsp</result>-->
-    <!--</action>-->
-
-    <!--<action name="queryAllEmp" class="cn.gjp0609.ems_v2.action.QueryAllEmpAction">-->
-    <!--<result name="success">/empList.jsp</result>-->
-    <!--</action>-->
-    <!--</package>-->
-
-    <!--<package name="admin" namespace="/admin" extends="struts-default">-->
-    <!--<action name="login" class="cn.gjp0609.ems_v2.action.AdminLoginAction">-->
-    <!--<result name="login">/index.jsp</result>-->
-    <!--<result name="success" type="redirectAction">-->
-    <!--<param name="namespace">/login</param>-->
-    <!--<param name="actionName">queryAllEmp</param>-->
-    <!--</result>-->
-    <!--</action>-->
-
-    <!--<action name="signup" class="cn.gjp0609.ems_v2.action.AdminSignUpAction">-->
-    <!--<result name="login">/index.jsp</result>-->
-    <!--<result name="none">/signUp.jsp</result>-->
-    <!--</action>-->
-    <!--</package>-->
 
 </struts>

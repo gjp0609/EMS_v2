@@ -13,7 +13,7 @@ public class Employee {
     private String sex;
     private Double salary;
     private Date birthday;
-    private Dept dept;
+    private Dept dept = new Dept();
 
     public Employee() {
     }

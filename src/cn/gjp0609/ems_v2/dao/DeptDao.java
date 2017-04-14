@@ -2,6 +2,7 @@ package cn.gjp0609.ems_v2.dao;
 
 
 import cn.gjp0609.ems_v2.entity.Dept;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public interface DeptDao {
      * @param dept 要删除的部门对象
      * @return 受影响部门个数
      */
-    public int deleteDept(Dept dept);
+    public int deleteDept(@Param("deptID") Integer deptID);
 
     /**
      * 更新部门信息
@@ -37,7 +38,7 @@ public interface DeptDao {
      * @param id 部门 ID
      * @return 查得的部门对象
      */
-    public Dept selectDeptById(Integer id);
+    public Dept selectDeptById(@Param("id") Integer id);
 
     /**
      * 查询所有部门信息

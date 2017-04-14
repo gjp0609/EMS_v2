@@ -25,7 +25,7 @@
                 <p><s:date name="#attr.date" format="yyyy/MM/dd"/></p>
             </div>
             <div id="topheader">
-                <h1 id="title"><a href="<s:url value="index.jsp"/>">Main</a></h1>
+                <h1 id="title"><a href="<s:url value="login.jsp"/>">Main</a></h1>
             </div>
             <div id="navigation"></div>
         </div>
@@ -37,21 +37,21 @@
                     <tr>
                         <td valign="middle" align="right">用户名:</td>
                         <td valign="middle" align="left">
-                            <input type="text" class="inputgri" name="name" title="此处输入用户名"/>
+                            <input type="text" class="inputgri" name="admin.name" title="此处输入用户名"/>
                         </td>
                     </tr>
 
                     <tr>
                         <td valign="middle" align="right">密码:</td>
                         <td valign="middle" align="left">
-                            <input type="password" class="inputgri" name="pwd" title="此处输入密码"/>
+                            <input type="password" class="inputgri" name="admin.password" title="此处输入密码"/>
                         </td>
                     </tr>
 
                     <tr>
                         <td></td>
                         <td><img name="adminSignUp" src="<s:url namespace="/admin" action="getVCode">
-                                <s:param name="name">adminSignUp</s:param></s:url>"/>"/>
+                                <s:param name="name">adminSignUp</s:param></s:url>"/>
                         </td>
                     </tr>
 

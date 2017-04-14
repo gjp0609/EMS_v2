@@ -19,7 +19,7 @@ public class AdminLoginFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) resp;
         Admin admin = (Admin) request.getSession().getAttribute("admin");
-        if (admin == null) response.sendRedirect(request.getContextPath() + "/index.jsp");
+        if (admin == null) response.sendRedirect(request.getContextPath() + "/login.jsp");
         else chain.doFilter(request, response);
     }
 
